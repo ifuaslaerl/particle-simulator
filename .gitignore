@@ -1,4 +1,4 @@
-# Prerequisites
+# Prerequisites & Dependency files
 *.d
 
 # Compiled Object files
@@ -31,10 +31,16 @@
 *.out
 *.app
 
-# VsCode shit
+# Editors & IDEs
 .vscode/
+.idea/
 
-# Temporary files
-data/
+# Build Directories (New Structure)
 build/
+bin/
+
+# Data directory (Reserved for future use)
+data/
+
+# Legacy/Root executable cleanup (Optional, prevents clutter if compiled wrongly)
 simulador

@@ -1,4 +1,4 @@
-#include "../includes/types.h"
+#include "../include/Field.hpp"
 
 Field::Field(FieldFunction f_){f=f_;}
 

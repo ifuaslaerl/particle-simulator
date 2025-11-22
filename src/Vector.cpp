@@ -1,4 +1,5 @@
-#include "../includes/types.h"
+#include "../include/Vector.hpp"
+#include <cmath>
 
 Vector::Vector() : x(0), y(0) {}
 Vector::Vector(ld x, ld y) : x(x), y(y) {}

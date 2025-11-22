@@ -1,7 +1,5 @@
-#include <cassert>
+#include "../include/Point.hpp"
 #include <GL/glew.h>
-#include "../includes/types.h"
-
 
 Point::Point(): x(0), y(0) {}
 Point::Point(Vector v): x(v.x), y(v.y) {}

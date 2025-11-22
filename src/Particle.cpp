@@ -1,8 +1,6 @@
-#include <cassert>
+#include "../include/Particle.hpp"
 #include <algorithm>
-#include <cmath>
 #include <GL/glew.h>
-#include "../includes/types.h"
 
 Particle::Particle(Point center_, ld radius_):
     center(center_), radius(radius_){

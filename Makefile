@@ -1,42 +1,51 @@
-TARGET = simulador
+TARGET_EXEC := simulador
 
-SRC_DIR = src
-BUILD_DIR = build
-INCLUDE_DIR = include
+BUILD_DIR := ./build
+SRC_DIR := ./src
+INCLUDE_DIR := ./include
+BIN_DIR := ./bin
 
-COMPILER = g++
-FLAGS = -Wall
-LIBS = -lGL -lGLEW -lglfw
+# Find all source files
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+# String substitution for object files
+OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
-$(TARGET): $(OBJS)
-	@echo "Compiling $(TARGET)."
-	@$(COMPILER) $(OBJS) -o $(TARGET) $(LIBS)
-	@echo "File $(TARGET) Compiled."
+# String substitution for dependency files
+DEPS := $(OBJS:.o=.d)
 
+# Compiler settings
+CXX := g++
+CXXFLAGS := -Wall -MMD -MP -I$(INCLUDE_DIR)
+LIBS := -lGL -lGLEW -lglfw
+
+# Final Target
+$(BIN_DIR)/$(TARGET_EXEC): $(OBJS)
+	@mkdir -p $(BIN_DIR)
+	@echo "Linking $(TARGET_EXEC)..."
+	@$(CXX) $(OBJS) -o $@ $(LIBS)
+	@echo "Build complete: $(BIN_DIR)/$(TARGET_EXEC)"
+
+# Compile C++ source
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@echo "Building $@."
 	@mkdir -p $(BUILD_DIR)
-	@$(COMPILER) $(FLAGS) -I$(INCLUDE_DIR) -c $< -o $@
-	@echo "File $@ Builded."
+	@echo "Compiling $<..."
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-objs: $(TARGET)
-	@echo "Objects made."
+# Include dependencies
+-include $(DEPS)
 
-run: objs
-	@echo "Runing aplication."
-	@./$(TARGET)
-	@echo "Aplication finished."
+.PHONY: run clean debug
+
+run: $(BIN_DIR)/$(TARGET_EXEC)
+	@echo "Running application..."
+	@./$(BIN_DIR)/$(TARGET_EXEC)
+
+debug: CXXFLAGS += -DDEBUG -g
+debug: clean $(BIN_DIR)/$(TARGET_EXEC)
+	@echo "Running in Debug mode..."
+	@./$(BIN_DIR)/$(TARGET_EXEC)
 
 clean:
-	@echo "Cleaning objects"
-	@rm -rf $(BUILD_DIR) $(TARGET)
-	@echo "Objects cleaned."
-
-debug: clean
-debug: FLAGS += -DDEBUG 
-debug: run
-
-.PHONY: clean run help
+	@echo "Cleaning build artifacts..."
+	@rm -rf $(BUILD_DIR) $(BIN_DIR)
